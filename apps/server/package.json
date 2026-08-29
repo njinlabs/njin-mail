@@ -1,0 +1,29 @@
+{
+  "name": "@njin-mail/server",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --env-file=../../.env --watch src/index.ts",
+    "build": "bun build src/index.ts --outdir dist --target bun",
+    "start": "bun --env-file=../../.env dist/index.js",
+    "db:generate": "drizzle-kit generate --config drizzle.config.ts",
+    "db:migrate": "bun --env-file=../../.env src/db/migrate.ts",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "@njin-mail/shared": "workspace:*",
+    "hono": "^4.6.14",
+    "imapflow": "^1.0.184",
+    "mailparser": "^3.7.2",
+    "nodemailer": "^6.9.16",
+    "drizzle-orm": "^0.45.2",
+    "zod": "^3.24.1",
+    "nanoid": "^5.0.9"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.31.10",
+    "@types/nodemailer": "^6.4.17",
+    "@types/mailparser": "^3.4.5",
+    "@types/bun": "latest"
+  }
+}

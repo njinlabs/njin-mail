@@ -1,0 +1,20 @@
+{
+  "name": "njin-mail",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,web -c blue,green \"bun run --filter apps/server dev\" \"bun run --filter apps/web dev\"",
+    "build": "bun run --filter apps/web build && bun run --filter apps/server build",
+    "start": "bun apps/server/dist/index.js",
+    "db:generate": "bun run --filter apps/server db:generate",
+    "db:migrate": "bun run --filter apps/server db:migrate",
+    "test": "bun test"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "typescript": "^5.7.2"
+  }
+}
