@@ -1,0 +1,24 @@
+[Unit]
+Description=njin-mail webmail server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=njinmail
+Group=njinmail
+WorkingDirectory=/opt/njin-mail
+ExecStart=/home/njinmail/.bun/bin/bun run start
+Restart=always
+RestartSec=5
+
+# Hardening — the process only needs to read its own code/data and talk to
+# the internet (IMAP/SMTP + Caddy on loopback); it doesn't need broad system access.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ReadWritePaths=/opt/njin-mail/apps/server/data
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

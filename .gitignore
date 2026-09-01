@@ -8,3 +8,4 @@ dist/
 apps/server/data/
 .DS_Store
 *.log
+*.tsbuildinfo

@@ -4,7 +4,7 @@ import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { db } from "../db/client";
 import { users } from "../db/schema";
-import { getTenantDomainFromHost, emailMatchesTenantDomain } from "../lib/tenant";
+import { resolveTenantDomain, emailMatchesTenantDomain } from "../lib/tenant";
 import { verifyImapCredentials } from "../lib/imapClient";
 import { createSession, deleteSession } from "../lib/sessionStore";
 import { sessionMiddleware, SESSION_COOKIE_NAME } from "../middleware/session";
@@ -23,7 +23,7 @@ authRoutes.post("/login", async (c) => {
   }
   const { email, password } = parsed.data;
 
-  const tenantDomain = getTenantDomainFromHost(c.req.header("host") ?? null);
+  const tenantDomain = resolveTenantDomain(c.req.header("host") ?? null);
   if (!tenantDomain || !emailMatchesTenantDomain(email, tenantDomain)) {
     return c.json({ error: "Unauthorized" }, 401);
   }

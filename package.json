@@ -6,11 +6,11 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "concurrently -n server,web -c blue,green \"bun run --filter apps/server dev\" \"bun run --filter apps/web dev\"",
-    "build": "bun run --filter apps/web build && bun run --filter apps/server build",
-    "start": "bun apps/server/dist/index.js",
-    "db:generate": "bun run --filter apps/server db:generate",
-    "db:migrate": "bun run --filter apps/server db:migrate",
+    "dev": "concurrently -n server,web -c blue,green \"bun run --filter ./apps/server dev\" \"bun run --filter ./apps/web dev\"",
+    "build": "bun run --filter ./apps/web build && bun run --filter ./apps/server build",
+    "start": "bun run --filter ./apps/server start",
+    "db:generate": "bun run --filter ./apps/server db:generate",
+    "db:migrate": "bun run --filter ./apps/server db:migrate",
     "test": "bun test"
   },
   "devDependencies": {

@@ -1,0 +1,30 @@
+# njin-mail reverse proxy — every tenant webmail hostname (mail.<client-domain>)
+# proxies to the same backend process on loopback. Caddy issues and renews a
+# Let's Encrypt certificate per domain listed below automatically.
+#
+# IMPORTANT: never rewrite/override the Host header here. The app enforces
+# multi-tenant login using the *original* Host header (see apps/server/src/lib/tenant.ts) —
+# rewriting it would let one tenant's users log in through another tenant's hostname,
+# or break login entirely. Caddy's reverse_proxy preserves Host by default; the
+# `header_up Host {host}` line below is just making that explicit.
+#
+# To onboard a new tenant:
+#   1. Client points mail.<their-domain> (CNAME or A record) at this server's IP.
+#   2. Add a domain block below, importing the shared `webmail` snippet.
+#   3. sudo systemctl reload caddy
+# No application deploy or restart needed — the backend already accepts any
+# Host header whose domain (after stripping "mail.") matches a real IMAP user.
+
+(webmail) {
+	reverse_proxy 127.0.0.1:3001 {
+		header_up Host {host}
+	}
+}
+
+mail.jadiweb.id {
+	import webmail
+}
+
+# mail.j3company.com {
+# 	import webmail
+# }

@@ -8,6 +8,7 @@ export default function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/mail" element={<MailPage />} />
       <Route path="/mail/:folderId" element={<MailPage />} />
+      <Route path="/mail/:folderId/:messageId" element={<MailPage />} />
       <Route path="*" element={<Navigate to="/mail" replace />} />
     </Routes>
   );

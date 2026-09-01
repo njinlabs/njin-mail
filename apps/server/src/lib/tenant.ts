@@ -1,3 +1,5 @@
+import { env } from "../env";
+
 /**
  * Multi-tenant domain enforcement: each tenant is reached through its own
  * webmail hostname (e.g. mail.j3company.com, mail.jadiweb.id), all pointing
@@ -15,4 +17,17 @@ export function getTenantDomainFromHost(hostHeader: string | null): string | nul
 export function emailMatchesTenantDomain(email: string, tenantDomain: string): boolean {
   const domain = email.split("@")[1]?.toLowerCase();
   return domain === tenantDomain.toLowerCase();
+}
+
+/**
+ * Resolves the tenant domain for a request, honoring `DEV_TENANT_DOMAIN` as a
+ * local-dev-only override so `localhost` can be used without a hosts-file
+ * entry for the real webmail hostname. Refuses the override outside of dev so
+ * a misconfigured `NODE_ENV` can't silently disable tenant enforcement.
+ */
+export function resolveTenantDomain(hostHeader: string | null): string | null {
+  if (env.DEV_TENANT_DOMAIN && env.NODE_ENV !== "production") {
+    return env.DEV_TENANT_DOMAIN;
+  }
+  return getTenantDomainFromHost(hostHeader);
 }

@@ -21,6 +21,13 @@ const envSchema = z.object({
 
   CREDENTIAL_ENCRYPTION_KEY: z.string().min(1, "CREDENTIAL_ENCRYPTION_KEY is required"),
   SESSION_SECRET: z.string().min(1, "SESSION_SECRET is required"),
+
+  NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
+  // Local-dev-only escape hatch: pins the multi-tenant domain check to a fixed
+  // value instead of parsing it from the request Host header, so `localhost`
+  // can be used directly without hosts-file tricks. tenant.ts refuses to
+  // honor this when NODE_ENV=production — never set it there.
+  DEV_TENANT_DOMAIN: z.string().optional(),
 });
 
 export const env = envSchema.parse(process.env);
