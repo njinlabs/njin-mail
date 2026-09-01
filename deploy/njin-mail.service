@@ -5,6 +5,10 @@ Wants=network-online.target
 
 [Service]
 Type=simple
+# Adjust User/Group/WorkingDirectory/ExecStart below to match wherever you
+# actually cloned the repo and installed Bun for that user — e.g. if you
+# deployed as your own login user into ~/njin-mail instead of a dedicated
+# /opt/njin-mail setup, use that user and the absolute path to ~/.bun/bin/bun.
 User=njinmail
 Group=njinmail
 WorkingDirectory=/opt/njin-mail
@@ -14,11 +18,16 @@ RestartSec=5
 
 # Hardening — the process only needs to read its own code/data and talk to
 # the internet (IMAP/SMTP + Caddy on loopback); it doesn't need broad system access.
+# NOTE: no ProtectHome here — if the app (or Bun itself) lives under a user's
+# home directory rather than /opt, ProtectHome=true hides that entire path
+# from the service and ExecStart fails with a misleading "No such file or
+# directory" even though the file genuinely exists. Only re-enable it
+# (ProtectHome=read-only is usually enough) if everything the service needs
+# to read/execute lives outside /home.
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ReadWritePaths=/opt/njin-mail/apps/server/data
-ProtectHome=true
 
 [Install]
 WantedBy=multi-user.target
