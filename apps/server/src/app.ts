@@ -19,12 +19,18 @@ app.route("/api/messages", messageRoutes);
 app.all("/api/*", (c) => c.json({ error: "Not found" }, 404));
 
 // Production: serve the built frontend for any non-/api route, with SPA fallback.
-// Resolved from this module's own location (not process.cwd()) so it works
-// the same whether the process is launched from apps/server or elsewhere.
-const webDist = path.join(import.meta.dir, "../../web/dist");
+// import.meta.dir pointed at the wrong directory once this ran as the bundled
+// dist/index.js on Linux (worked in local dev only by coincidence). The "start"
+// script always runs with cwd = apps/server (same assumption ../../.env relies
+// on for env loading), so anchor off process.cwd() instead — verified against
+// both possible locations so a future cwd change fails loudly instead of
+// silently 404ing every route again.
+const cwdWebDist = path.join(process.cwd(), "../web/dist");
+const moduleWebDist = path.join(import.meta.dir, "../../web/dist");
+const webDist = existsSync(path.join(cwdWebDist, "index.html")) ? cwdWebDist : moduleWebDist;
 if (!existsSync(path.join(webDist, "index.html"))) {
   console.error(
-    `apps/web/dist/index.html not found (looked in ${webDist}) — every route will 404. ` +
+    `apps/web/dist/index.html not found in either ${cwdWebDist} or ${moduleWebDist} — every route will 404. ` +
       `Did you run "bun run build" from the repo root (which builds both apps/web and apps/server), ` +
       `instead of from inside apps/server (which only rebuilds the server)?`
   );
