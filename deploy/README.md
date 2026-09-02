@@ -66,7 +66,12 @@ sudo systemctl status njin-mail   # should show "active (running)"
 
 sudo cp /opt/njin-mail/deploy/Caddyfile /etc/caddy/Caddyfile
 # Edit /etc/caddy/Caddyfile: confirm the tenant domain(s) listed are correct
-# and DNS for each already points at this server's IP.
+# and DNS for each already points at this server's IP, AND confirm the
+# `root *` path in the `webmail` snippet actually matches where you cloned
+# the repo (it must point at <repo>/apps/web/dist) — Caddy serves the built
+# frontend directly off disk and only proxies /api/* to the backend, so a
+# wrong path here means every non-API page 404s even though the app is
+# perfectly healthy.
 sudo systemctl reload caddy
 ```
 
