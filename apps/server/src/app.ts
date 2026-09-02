@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import path from "node:path";
 import { Hono } from "hono";
 import { serveStatic } from "hono/bun";
@@ -21,5 +22,12 @@ app.all("/api/*", (c) => c.json({ error: "Not found" }, 404));
 // Resolved from this module's own location (not process.cwd()) so it works
 // the same whether the process is launched from apps/server or elsewhere.
 const webDist = path.join(import.meta.dir, "../../web/dist");
+if (!existsSync(path.join(webDist, "index.html"))) {
+  console.error(
+    `apps/web/dist/index.html not found (looked in ${webDist}) — every route will 404. ` +
+      `Did you run "bun run build" from the repo root (which builds both apps/web and apps/server), ` +
+      `instead of from inside apps/server (which only rebuilds the server)?`
+  );
+}
 app.use("/*", serveStatic({ root: webDist }));
 app.get("*", serveStatic({ path: path.join(webDist, "index.html") }));
