@@ -114,6 +114,17 @@ export function toggleMessageFlag(messageId: string) {
   return apiFetch<{ flagged: boolean }>(`/api/messages/${messageId}/flag`, { method: "POST" });
 }
 
+export function getSettings() {
+  return apiFetch<{ displayName: string | null }>("/api/settings");
+}
+
+export function updateSettings(displayName: string | null) {
+  return apiFetch<{ displayName: string | null }>("/api/settings", {
+    method: "PUT",
+    body: JSON.stringify({ displayName }),
+  });
+}
+
 export type MoveDestination = "junk" | "trash" | "archive";
 
 export function moveMessage(messageId: string, destination: MoveDestination) {

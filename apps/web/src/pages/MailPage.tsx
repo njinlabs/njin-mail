@@ -326,6 +326,7 @@ export default function MailPage() {
           <span className="hidden text-neutral-300 md:inline">{session.user.email}</span>
           <button
             type="button"
+            onClick={() => navigate("/settings")}
             className="rounded-md p-1.5 text-neutral-300 hover:bg-neutral-800 hover:text-white"
             aria-label="Pengaturan"
           >

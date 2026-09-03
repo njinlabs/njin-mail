@@ -5,6 +5,7 @@ import { serveStatic } from "hono/bun";
 import { authRoutes } from "./routes/auth";
 import { folderRoutes } from "./routes/folders";
 import { messageRoutes } from "./routes/messages";
+import { settingsRoutes } from "./routes/settings";
 
 export const app = new Hono();
 
@@ -12,6 +13,7 @@ app.get("/api/health", (c) => c.json({ ok: true }));
 app.route("/api/auth", authRoutes);
 app.route("/api/folders", folderRoutes);
 app.route("/api/messages", messageRoutes);
+app.route("/api/settings", settingsRoutes);
 
 // Any /api/* path that fell through the routers above didn't match a defined
 // route — respond with a real 404 instead of letting it reach the SPA

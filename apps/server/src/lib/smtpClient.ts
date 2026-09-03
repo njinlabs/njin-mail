@@ -16,6 +16,8 @@ export interface AttachmentInput {
 }
 
 export interface SendMailInput {
+  /** Display name shown alongside the sender's address, e.g. "Jane Doe" for `Jane Doe <jane@x.com>`. */
+  fromName?: string | null;
   to: string[];
   cc?: string[];
   bcc?: string[];
@@ -45,7 +47,7 @@ export async function sendMail(
   const messageId = `<${crypto.randomUUID()}@${domain}>`;
 
   const mailOptions = {
-    from: email,
+    from: input.fromName ? { name: input.fromName, address: email } : email,
     to: input.to,
     cc: input.cc,
     bcc: input.bcc,

@@ -3,7 +3,7 @@ import { z } from "zod";
 import { and, eq } from "drizzle-orm";
 import { simpleParser } from "mailparser";
 import { db } from "../db/client";
-import { attachments, folders, messages } from "../db/schema";
+import { attachments, folders, messages, users } from "../db/schema";
 import { sessionMiddleware } from "../middleware/session";
 import { getSessionPassword } from "../lib/sessionStore";
 import { ensureMessageBody } from "../lib/messageBody";
@@ -98,9 +98,12 @@ messageRoutes.post("/send", sessionMiddleware, async (c) => {
     }
   }
 
+  const [user] = await db.select().from(users).where(eq(users.id, session.userId)).limit(1);
+
   let raw: Buffer;
   try {
     const result = await sendMail(session.email, password, {
+      fromName: user?.displayName,
       to,
       cc,
       bcc,

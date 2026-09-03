@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import MailPage from "./pages/MailPage";
+import SettingsPage from "./pages/SettingsPage";
 
 export default function App() {
   return (
@@ -9,6 +10,7 @@ export default function App() {
       <Route path="/mail" element={<MailPage />} />
       <Route path="/mail/:folderId" element={<MailPage />} />
       <Route path="/mail/:folderId/:messageId" element={<MailPage />} />
+      <Route path="/settings" element={<SettingsPage />} />
       <Route path="*" element={<Navigate to="/mail" replace />} />
     </Routes>
   );
